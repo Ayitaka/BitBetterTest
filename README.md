@@ -38,8 +38,7 @@ The following instructions are for unix-based systems (Linux, BSD, macOS). It is
 * Bitwarden (tested with 1.37.2, might work on lower versions)
 
 ## Installing BitBetter
-The easiest way to install BitBetter is to use the bitbetter script which utilizes the public Docker images.
-Public docker images are compiled automatically anytime a new version of Bitwarden is released or when changes are made to BitBetter.
+The easiest way to install BitBetter is to use the bitbetter script which utilizes the public BitBetter docker images. These docker images are compiled automatically anytime a new version of Bitwarden is released or when changes are made to BitBetter.
 
 #### Run the install script:
 
@@ -62,7 +61,7 @@ Licenses are used for enabling certain features. There are licenses for Users an
 ./generate_license.sh user USERS_NAME EMAIL USERS_GUID
 ```
 
-Example: generate_license.sh user Ayitaka ayitaka@example.com 12345678-1234-1234-1234-123456789012
+Example: generate_license.sh user SomeUser someuser@example.com 12345678-1234-1234-1234-123456789012
 
 ---
 
@@ -166,13 +165,14 @@ services:
     image: bitbetter/identity
 ```
 
-In order to ignore errors when trying to pull the modified images, you'll also want to edit the `/path/to/bwdata/scripts/run.sh` file. In the `function restart()` block, comment out the call to `dockerComposePull`.
+In order to ignore errors when trying to pull the modified images (which do not exist on Docker Hub), you'll also want to edit the `/path/to/bwdata/scripts/run.sh` file. In the `function restart()` block, comment out the call to `dockerComposePull`.
 
 > Replace `dockerComposePull`<br>with `#dockerComposePull`
 
 You can now start or restart Bitwarden as normal and the modified api will be used. **It is now ready to accept self-issued licenses.**
 
 ## Updating Built BitBetter and Bitwarden
+
 #### Using the bitbetter script:
 ```bash
 curl --retry 3 "https://raw.githubusercontent.com/Ayitaka/BitBetterTest/master/bitbetter.sh" -o "./bitbetter.sh" && chmod 0755 ./bitbetter.sh && ./bitbetter.sh update build
@@ -181,7 +181,12 @@ curl --retry 3 "https://raw.githubusercontent.com/Ayitaka/BitBetterTest/master/b
 ---
 
 #### Manually:
-To update Bitwarden, the provided `update-bitwarden.sh` script can be used. It will rebuild the BitBetter images and automatically update Bitwarden afterwards. Docker pull errors can be ignored for api and identity images.
+To update Bitwarden, you can use the provided script. It will rebuild the BitBetter images and automatically update Bitwarden afterwards. Docker pull errors can be ignored for api and identity images.
+
+```bash
+cd BitBetterTest
+cp -f .build/update-bitwarden.sh ./update-bitwarden.sh
+```
 
 ## Manually Generating Certificate
 
