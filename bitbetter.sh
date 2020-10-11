@@ -212,13 +212,13 @@ build_bitbetter() {
 
 	if [ "${REBUILD}" ] || [[ $BUILD_BB =~ ^[Yy]$ ]]; then
 
-	    [ -e BitBetter/src/bitBetter/Dockerfile.dockerhub ] || mv BitBetter/src/bitBetter/Dockerfile BitBetter/src/bitBetter/Dockerfile.dockerhub
-	    mv BitBetter/.build/Dockerfile.bitBetter BitBetter/src/bitBetter/Dockerfile
+	    [ -e ${REPO}/src/bitBetter/Dockerfile.dockerhub ] || mv ${REPO}/src/bitBetter/Dockerfile ${REPO}/src/bitBetter/Dockerfile.dockerhub
+	    mv ${REPO}/.build/Dockerfile.bitBetter ${REPO}/src/bitBetter/Dockerfile
 
-	    [ -e BitBetter/src/licenseGen/Dockerfile.dockerhub ] || mv BitBetter/src/licenseGen/Dockerfile BitBetter/src/licenseGen/Dockerfile.dockerhub
-	    mv BitBetter/.build/Dockerfile.licenseGen BitBetter/src/licenseGen/Dockerfile
+	    [ -e ${REPO}/src/licenseGen/Dockerfile.dockerhub ] || mv ${REPO}/src/licenseGen/Dockerfile ${REPO}/src/licenseGen/Dockerfile.dockerhub
+	    mv ${REPO}/.build/Dockerfile.licenseGen ${REPO}/src/licenseGen/Dockerfile
 
-		cd BitBetter && ./build.sh
+		cd ${REPO} && ./build.sh
 
 		cd src/licenseGen && ./build.sh
 	fi
