@@ -1,4 +1,4 @@
-<a href="https://github.com/ayitaka/BitBetterTest/actions"><img alt="GitHub Actions Build" src="https://github.com/ayitaka/BitBetterTest/workflows/BitBetterTest%20Image/badge.svg"></a>
+<a href="https://github.com/ayitaka/BitBetterTest/actions"><img alt="GitHub Actions Build" src="https://github.com/ayitaka/BitBetterTest/workflows/BitBetter%20Image/badge.svg"></a>
 <a href="https://hub.docker.com/r/ayitaka/bitbetter"><img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/ayitaka/bitbetter.svg"></a>
 # BitBetter
 
@@ -9,6 +9,8 @@ Please see the FAQ below for details on why this software was created.
 _Beware! BitBetter does janky stuff to rewrite the bitwarden core dll and allow the installation of a self signed certificate. Use at your own risk!_
 
 Credit to https://github.com/h44z/BitBetter and https://github.com/jakeswenson/BitBetter
+
+![BitBetter Image](https://github.com/Ayitaka/BitBetterTest/workflows/BitBetter%20Image/badge.svg)
 
 # Table of Contents
 1. [Getting Started](#getting-started)
