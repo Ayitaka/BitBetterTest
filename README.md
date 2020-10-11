@@ -18,16 +18,14 @@ Credit to https://github.com/h44z/BitBetter and https://github.com/jakeswenson/B
     + [Installing BitBetter](#installing-bitbetter)
     + [Updating BitBetter and Bitwarden](#updating-bitbetter-and-bitwarden)
     + [Generating Signed Licenses](#generating-signed-licenses)
-2. [Advanced](#advanced)
+2. [Script Options](#script-options)
+3. [Advanced](#advanced)
     + [Building BitBetter](#building-bitbetter)
     + [Updating Built BitBetter and Bitwarden](#updating-built--bitbetter-and-bitwarden)
     + [Manually Generating Certificate](#manually-generating-certificate)
     + [Manually Generating Signed Licenses](#manually-generating-signed-licenses)
-2. [Script Options](#script-options)
-    + [Syntax](#syntax)
-    + [Options](#options)
-3. [FAQ](#faq-questions-you-might-have-)
-4. [Footnotes](#footnotes)
+4. [FAQ](#faq-questions-you-might-have-)
+5. [Footnotes](#footnotes)
 
 # Getting Started
 The following instructions are for unix-based systems (Linux, BSD, macOS). It is possible to use a Windows based system, assuming you are able to enable and install [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
@@ -62,7 +60,7 @@ To update Bitwarden, the provided `update-bitwarden.sh` script can be used. It w
 
 Using the generate_license script:
 
-For a user:
+###For a user:
 ```bash
 ./generate_license.sh user USERS_NAME EMAIL USERS_GUID
 ```
@@ -71,12 +69,54 @@ Example: generate_license.sh user Ayitaka ayitaka@example.com 12345678-1234-1234
 
 ---
 
-For an Organization:
+###For an Organization:
 ```bash
 ./generate_license.sh org ORGS_NAME EMAIL BUSINESS_NAME
 ```
 
 Example: generate_license.sh org "My Organization Display Name" admin@mybusinesscompany.com "My Company Inc."
+
+# Script Options
+
+## Syntax
+```bash
+./bitbetter.sh
+```
+Install using images from Docker Hub
+```bash
+./bitbetter.sh install [auto] [regencerts] [recreate]
+```
+
+Install/build from Github src
+```bash
+./bitbetter.sh install build  [auto] [regencerts] [recreate]
+```
+
+Update using images from Docker Hub
+```bash
+./bitbetter.sh update [auto] [regencerts] [recreate] [restart]
+```
+
+Update from Github src
+```bash
+./bitbetter.sh update build [auto] [regencerts] [recreate] [restart]
+```
+
+Update/force rebuild from Github src
+```bash
+./bitbetter.sh update rebuild [auto] [regencerts] [recreate] [restart]
+```
+
+## Options
+```yaml
+AUTO                  Skip prompts, update this script, create certs only if they do not exist,
+                      and recreate docker-compose.override.yml
+REGENCERTS            Force regeneratioin of certificates
+RECREATE              Force recreation of docker-compose.override.yml
+RESTART               Force restart of Bitwarden if Bitwarden's update does not do a restart
+LOCALTIME             Force Bitwarden to write logs using localtime instead of UTC 
+                      (Use LOCALTIME with RECREATE, or it has no effect)
+```
 
 # Advanced
 
@@ -176,47 +216,6 @@ Additional, instead of interactive mode, you can also pass the parameters direct
 ./src/licenseGen/run.sh /Absolute/Path/To/BitBetter/.keys/cert.pfx user "Name" "EMail" "User-GUID"
 ./src/licenseGen/run.sh /Absolute/Path/To/BitBetter/.keys/cert.pfx org "Name" "EMail" "Install-ID used to install the server"
 ```
-
-# Script Options
-
-## Syntax
-```bash
-./bitbetter.sh
-```
-Install using images from Docker Hub
-```bash
-./bitbetter.sh install [auto] [regencerts] [recreate]
-```
-
-Install/build from Github src
-```bash
-./bitbetter.sh install build  [auto] [regencerts] [recreate]
-```
-
-Update using images from Docker Hub
-```bash
-./bitbetter.sh update [auto] [regencerts] [recreate] [restart]
-```
-
-Update from Github src
-```bash
-./bitbetter.sh update build [auto] [regencerts] [recreate] [restart]
-```
-
-Update/force rebuild from Github src
-```bash
-./bitbetter.sh update rebuild [auto] [regencerts] [recreate] [restart]
-```
-
-## Options
-```yaml
-AUTO                  Skip prompts, update this script, create certs only if they do not exist, and recreate docker-compose.override.yml
-REGENCERTS            Force regeneratioin of certificates
-RECREATE              Force recreation of docker-compose.override.yml
-RESTART               Force restart of Bitwarden if Bitwarden's update does not do a restart
-LOCALTIME             Force Bitwarden to write logs using localtime instead of UTC (use with RECREATE, or it has no effect)
-```
-
 
 # FAQ: Questions you might have.
 
