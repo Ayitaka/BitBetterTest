@@ -1,5 +1,5 @@
 <a href="https://github.com/ayitaka/BitBetterTest/actions"><img alt="GitHub Actions Build" src="https://github.com/ayitaka/BitBetterTest/workflows/BitBetter%20Image/badge.svg"></a>
-<a href="https://hub.docker.com/r/ayitaka/bitbetter"><img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/ayitaka/bitbetter.svg"></a>
+<a href="https://hub.docker.com/r/ayitaka/bitbetter-api"><img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/ayitaka/bitbetter-api.svg"></a>
 # BitBetter
 
 BitBetter is is a tool to modify Bitwarden's core dll to allow you to generate your own individual and organisation licenses. **You must have an existing installation of Bitwarden for BitBetter to modify.**
@@ -54,13 +54,10 @@ Using the bitbetter script, you can update both BitBetter and Bitwarden:
 ./bitbetter.sh update auto
 ```
 
-To update Bitwarden, the provided `update-bitwarden.sh` script can be used. It will rebuild the BitBetter images and automatically update Bitwarden afterwards. Docker pull errors can be ignored for api and identity images.
-
 ## Generating Signed Licenses
+Licenses are used for enabling certain features. There are licenses for Users and for Organizations. When you install BitBetter, a script called generate_license.sh is placed in the installation directory to make generating licenses easy.
 
-Using the generate_license script:
-
-###For a user:
+### For a user:
 ```bash
 ./generate_license.sh user USERS_NAME EMAIL USERS_GUID
 ```
@@ -69,12 +66,19 @@ Example: generate_license.sh user Ayitaka ayitaka@example.com 12345678-1234-1234
 
 ---
 
-###For an Organization:
+### For an Organization:
 ```bash
 ./generate_license.sh org ORGS_NAME EMAIL BUSINESS_NAME
 ```
 
 Example: generate_license.sh org "My Organization Display Name" admin@mybusinesscompany.com "My Company Inc."
+
+---
+
+###Interactive Mode (will prompt you for required input):
+```bash
+./generate_license.sh
+```
 
 # Script Options
 
@@ -123,12 +127,14 @@ LOCALTIME             Force Bitwarden to write logs using localtime instead of U
 ## Building BitBetter
 Alternatively, you can build the docker images yourself using the BitBetter source code on Github.
 
-Using the install script:
+#### Using the install script:
 ```bash
 curl --retry 3 "https://raw.githubusercontent.com/Ayitaka/BitBetterTest/master/bitbetter.sh" -o "./bitbetter.sh" && chmod 0755 ./bitbetter.sh && ./bitbetter.sh install build
 ```
 
-Manually:
+---
+
+#### Manually:
 ```bash
 git clone https://github.com/jakeswenson/BitBetter.git
 ```
@@ -164,6 +170,7 @@ You'll also want to edit the `/path/to/bwdata/scripts/run.sh` file. In the `func
 You can now start or restart Bitwarden as normal and the modified api will be used. **It is now ready to accept self-issued licenses.**
 
 ## Updating Built BitBetter and Bitwarden
+To update Bitwarden, the provided `update-bitwarden.sh` script can be used. It will rebuild the BitBetter images and automatically update Bitwarden afterwards. Docker pull errors can be ignored for api and identity images.
 
 ## Manually Generating Certificate
 
