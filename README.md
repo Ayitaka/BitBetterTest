@@ -41,15 +41,15 @@ The following instructions are for unix-based systems (Linux, BSD, macOS). It is
 The easiest way to install BitBetter is to use the bitbetter script which utilizes the public Docker images.
 Public docker images are compiled automatically anytime a new version of Bitwarden is released or when changes are made to BitBetter.
 
-Run the install script:
+#### Run the install script:
 
 ```bash
 curl --retry 3 "https://raw.githubusercontent.com/Ayitaka/BitBetterTest/master/bitbetter.sh" -o "./bitbetter.sh" && chmod 0755 ./bitbetter.sh && ./bitbetter.sh install
 ```
 
 ## Updating BitBetter and Bitwarden
-Using the bitbetter script, you can update both BitBetter and Bitwarden:
 
+#### Using the bitbetter script, you can update both BitBetter and Bitwarden:
 ```bash
 ./bitbetter.sh update auto
 ```
@@ -57,7 +57,7 @@ Using the bitbetter script, you can update both BitBetter and Bitwarden:
 ## Generating Signed Licenses
 Licenses are used for enabling certain features. There are licenses for Users and for Organizations. When you install BitBetter, a script called generate_license.sh is placed in the installation directory to make generating licenses easy.
 
-### For a user:
+#### For a user:
 ```bash
 ./generate_license.sh user USERS_NAME EMAIL USERS_GUID
 ```
@@ -66,7 +66,7 @@ Example: generate_license.sh user Ayitaka ayitaka@example.com 12345678-1234-1234
 
 ---
 
-### For an Organization:
+#### For an Organization:
 ```bash
 ./generate_license.sh org ORGS_NAME EMAIL BUSINESS_NAME
 ```
@@ -75,14 +75,14 @@ Example: generate_license.sh org "My Organization Display Name" admin@mybusiness
 
 ---
 
-###Interactive Mode (will prompt you for required input):
+#### Interactive Mode (will prompt you for required input):
 ```bash
 ./generate_license.sh
 ```
 
 # Script Options
 
-## Syntax
+### Syntax
 ```bash
 ./bitbetter.sh
 ```
@@ -111,7 +111,7 @@ Update/force rebuild from Github src
 ./bitbetter.sh update rebuild [auto] [regencerts] [recreate] [restart]
 ```
 
-## Options
+### Options
 ```yaml
 AUTO                  Skip prompts, update this script, create certs only if they do not exist,
                       and recreate docker-compose.override.yml
@@ -136,13 +136,14 @@ curl --retry 3 "https://raw.githubusercontent.com/Ayitaka/BitBetterTest/master/b
 
 #### Manually:
 ```bash
-git clone https://github.com/jakeswenson/BitBetter.git
+git clone https://github.com/Ayitaka/BitBetterTest.git
 ```
 
 Now that you've set up your build environment, you can **run the main build script** to generate a modified version of the `bitwarden/api` and `bitwarden/identity` docker images.
 
-From the BitBetter directory, simply run:
+Change to the BitBetter directory and run build.sh:
 ```bash
+cd BitBetterTest
 ./build.sh
 ```
 
@@ -150,7 +151,7 @@ This will create a new self-signed certificate in the `.keys` directory, if one 
 `bitwarden/api` -> `bitbetter/api`
 `bitwarden/identity` -> `bitbetter/identity`
 
-You may now simply create the file `/path/to/bwdata/docker/docker-compose.override.yml` with the following contents to utilize the modified images.
+Now create the file `/path/to/bwdata/docker/docker-compose.override.yml` with the following contents to utilize the modified BitBetter images:
 
 ```yaml
 version: '3'
@@ -163,7 +164,7 @@ services:
     image: bitbetter/identity
 ```
 
-You'll also want to edit the `/path/to/bwdata/scripts/run.sh` file. In the `function restart()` block, comment out the call to `dockerComposePull`.
+In order to ignore errors when trying to pull the modified images, you'll also want to edit the `/path/to/bwdata/scripts/run.sh` file. In the `function restart()` block, comment out the call to `dockerComposePull`.
 
 > Replace `dockerComposePull`<br>with `#dockerComposePull`
 
@@ -191,9 +192,10 @@ Manually generating licenses:
 
 There is a tool included in the directory `src/licenseGen/` that will generate new individual and organization licenses. These licenses will be accepted by the modified Bitwarden because they will be signed by the certificate you generated in earlier steps.
 
-First, from the `BitBetter` directory, **build the license generator**.<sup>[2](#f2)</sup>
+First, change to the`BitBetter/src/licenseGen` directory, and then **build the license generator**.<sup>[2](#f2)</sup>
 
 ```bash
+cd BitBetterTest/src/licenseGen
 ./build.sh
 ```
 
