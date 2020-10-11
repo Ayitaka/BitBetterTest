@@ -3,7 +3,7 @@
 GITHUB="Ayitaka"
 REPO="BitBetterTest"
 DOCKERHUB="ayitaka"
-DOCKERHUBREPO="bitbetter"
+DOCKERHUBREPOLICENSEGEN="bitbetter-licensegen"
 
 if [ -e "${PWD}/bwdata/env/global.override.env" ]; then
         SERVER_INSTALLATION_ID=$( grep 'globalSettings__installation__id=' $PWD/bwdata/env/global.override.env | awk -F"=" '{print $2}' )
@@ -106,5 +106,5 @@ if [ "${TYPE}" == "org" ]; then
         done
 fi
 
-docker pull ${DOCKERHUB}/${DOCKERHUBREPO}:licensegen-latest
-docker run -it --rm -v $PWD/bwdata/bitbetter/cert.pfx:/cert.pfx ${DOCKERHUB}/${DOCKERHUBREPO}:licensegen-latest "${TYPE}" "${NAME}" "${EMAIL}" "${GUID}" "${BUSINESS_NAME}"
+docker pull ${DOCKERHUB}/${DOCKERHUBREPOLICENSEGEN}:latest
+docker run -it --rm -v $PWD/bwdata/bitbetter/cert.pfx:/cert.pfx ${DOCKERHUB}/${DOCKERHUBREPOLICENSEGEN}:latest "${TYPE}" "${NAME}" "${EMAIL}" "${GUID}" "${BUSINESS_NAME}"

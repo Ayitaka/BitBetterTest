@@ -24,7 +24,8 @@ GITHUB="Ayitaka"
 REPO="BitBetterTest"
 BRANCH="master"
 DOCKERHUB="ayitaka"
-DOCKERHUBREPO="bitbetter"
+DOCKERHUBREPOAPI="bitbetter-api"
+DOCKERHUBREPOIDENTITY="bitbetter-identity"
 
 initilize() {
 	# Check that necessary commands are available
@@ -249,12 +250,12 @@ recreate_override() {
 				echo ""
 				echo "services:"
 				echo "  api:"
-				echo "    image: ${DOCKERHUB}/${DOCKERHUBREPO}:api-$BW_VERSION"
+				echo "    image: ${DOCKERHUB}/${DOCKERHUBREPOAPI}:$BW_VERSION"
 				echo "    volumes:"
 				echo "      - ../bitbetter/cert.cert:/newLicensing.cer"
 				echo ""
 				echo "  identity:"
-				echo "    image: ${DOCKERHUB}/${DOCKERHUBREPO}:identity-$BW_VERSION"
+				echo "    image: ${DOCKERHUB}/${DOCKERHUBREPOIDENTITY}:$BW_VERSION"
 				echo "    volumes:"
 				echo "      - ../bitbetter/cert.cert:/newLicensing.cer"
 			fi
@@ -274,12 +275,12 @@ update_bitwarden() {
 	#if [ "$( docker container inspect -f '{{.State.Status}}' bitwarden-api )" == "running" ]; then
 	#	docker stop bitwarden-api && docker rm bitwarden-api
 	#fi
-	#docker pull ${DOCKERHUB}/${DOCKERHUBREPO}:api-${BW_VERSION}
+	#docker pull ${DOCKERHUB}/${DOCKERHUBREPOAPI}:${BW_VERSION}
 
 	#if [ "$( docker container inspect -f '{{.State.Status}}' bitwarden-identity )" == "running" ]; then
 	#	docker stop bitwarden-identity && docker rm bitwarden-identity
 	#fi
-	#docker pull ${DOCKERHUB}/${DOCKERHUBREPO}:identity-${BW_VERSION}
+	#docker pull ${DOCKERHUB}/${DOCKERHUBREPOIDENTITY}:${BW_VERSION}
 
 	# Update bitwarden.sh, update Bitwarden, and if no update of Bitwarden was needed, restart Bitwarden for BitBetter changes to take affect
 	cd "${BITWARDEN_BASE}" || exit

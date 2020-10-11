@@ -13,8 +13,10 @@ jobs:
     outputs:
       buildimage: ${{ steps.get_version.outputs.buildimage }}
       buildversion: ${{ steps.get_version.outputs.buildversion }}
-      dockerhub: ${{ steps.set_repo.outputs.dockerhub }}
-      dockerhubrepo: ${{ steps.set_repo.outputs.dockerhubrepo }}
+      dockerhub: ${{ steps.set_dockerhub.outputs.dockerhub }}
+      dockerhubrepoapi: ${{ steps.set_dockerhub.outputs.dockerhubrepoapi }}
+      dockerhubrepoidentity: ${{ steps.set_dockerhub.outputs.dockerhubrepoidentity }}
+      dockerhubrepolicensegen: ${{ steps.set_dockerhub.outputs.dockerhubrepolicensegen }}
     steps:
       - uses: actions/checkout@v2
       - name: Get Latest Version
@@ -29,13 +31,17 @@ jobs:
           fi
           echo "##[set-output name=buildimage;]$NEED_BUILD"
           echo "##[set-output name=buildversion;]$BW_VERSION_LATEST"
-      - name: Set Repo
-        id: set_repo
+      - name: Set Dockerhub
+        id: set_dockerhub
         run: |
           export DOCKERHUB=ayitaka
+          export DOCKERHUBREPOAPI=bitbetter-api
+          export DOCKERHUBREPOIDENTITY=bitbetter-identity
+          export DOCKERHUBREPOLICENSEGEN=bitbetter-licensegen
           echo "##[set-output name=dockerhub;]$DOCKERHUB"
-          export REPOSITORY=bitbetter
-          echo "##[set-output name=dockerhubrepo;]$REPOSITORY"
+          echo "##[set-output name=dockerhubrepoapi;]$DOCKERHUBREPOAPI"
+          echo "##[set-output name=dockerhubrepoidentity;]$DOCKERHUBREPOIDENTITY"
+          echo "##[set-output name=dockerhubrepolicensegen;]$DOCKERHUBREPOLICENSEGEN"
 
   build_bitbetter:
     runs-on: ubuntu-latest
@@ -44,34 +50,35 @@ jobs:
     if: ${{ needs.check_version.outputs.buildimage == 'true' || github.event_name == 'push' }}
     env:
       DOCKERHUB: ${{ needs.check_version.outputs.dockerhub }}
-      REPO: ${{ needs.check_version.outputs.dockerhubrepo }}
+      DOCKERHUBREPOAPI: ${{ needs.check_version.outputs.dockerhubrepoapi }}
+      DOCKERHUBREPOIDENTITY: ${{ needs.check_version.outputs.dockerhubrepoidentity }}
       VERSION: ${{ needs.check_version.outputs.buildversion }}
     steps:
       - uses: actions/checkout@v2
       - name: Build Image
         id: build_image
         run: |
-          docker build -f ./src/bitBetter/Dockerfile --build-arg BITWARDEN_TAG=bitwarden/api:${{ needs.check_version.outputs.buildversion }} --label com.bitwarden.product="bitbetter" -t ${DOCKERHUB}/${REPO}:api .
-          docker build -f ./src/bitBetter/Dockerfile --build-arg BITWARDEN_TAG=bitwarden/identity:${{ needs.check_version.outputs.buildversion }} --label com.bitwarden.product="bitbetter" -t ${DOCKERHUB}/${REPO}:identity .
+          docker build -f ./src/bitBetter/Dockerfile --build-arg BITWARDEN_TAG=bitwarden/api:${{ needs.check_version.outputs.buildversion }} --label com.bitwarden.product="bitbetter" -t ${DOCKERHUB}/${DOCKERHUBREPOAPI} .
+          docker build -f ./src/bitBetter/Dockerfile --build-arg BITWARDEN_TAG=bitwarden/identity:${{ needs.check_version.outputs.buildversion }} --label com.bitwarden.product="bitbetter" -t ${DOCKERHUB}/${DOCKERHUBREPOIDENTITY} .
       - name: Login
         run: |
           docker login -u ${{ secrets.dockerID }} -p ${{ secrets.dockerPassword }}
       - name: Deploy Latest
         run: |
-          docker tag ${DOCKERHUB}/${REPO}:api ${DOCKERHUB}/${REPO}:api-latest
-          docker tag ${DOCKERHUB}/${REPO}:identity ${DOCKERHUB}/${REPO}:identity-latest
-          docker push ${DOCKERHUB}/${REPO}:api-latest
-          docker push ${DOCKERHUB}/${REPO}:identity-latest
-          echo ${DOCKERHUB}/${REPO}:api-latest Deployed
-          echo ${DOCKERHUB}/${REPO}:identity-latest Deployed
+          docker tag ${DOCKERHUB}/${DOCKERHUBREPOAPI} ${DOCKERHUB}/${DOCKERHUBREPOAPI}:latest
+          docker tag ${DOCKERHUB}/${DOCKERHUBREPOIDENTITY} ${DOCKERHUB}/${DOCKERHUBREPOIDENTITY}:latest
+          docker push ${DOCKERHUB}/${DOCKERHUBREPOAPI}:latest
+          docker push ${DOCKERHUB}/${DOCKERHUBREPOIDENTITY}:latest
+          echo ${DOCKERHUB}/${DOCKERHUBREPOAPI}:latest Deployed
+          echo ${DOCKERHUB}/${DOCKERHUBREPOIDENTITY}:latest Deployed
       - name: Deploy Tag
         run: |
-          docker tag ${DOCKERHUB}/${REPO}:api ${DOCKERHUB}/${REPO}:api-${VERSION}
-          docker tag ${DOCKERHUB}/${REPO}:identity ${DOCKERHUB}/${REPO}:identity-${VERSION}
-          docker push ${DOCKERHUB}/${REPO}:api-${VERSION}
-          docker push ${DOCKERHUB}/${REPO}:identity-${VERSION}
-          echo ${DOCKERHUB}/${REPO}:api-${VERSION} Deployed
-          echo ${DOCKERHUB}/${REPO}:identity-${VERSION} Deployed
+          docker tag ${DOCKERHUB}/${DOCKERHUBREPOAPI} ${DOCKERHUB}/${DOCKERHUBREPOAPI}:${VERSION}
+          docker tag ${DOCKERHUB}/${DOCKERHUBREPOIDENTITY} ${DOCKERHUB}/${DOCKERHUBREPOIDENTITY}:${VERSION}
+          docker push ${DOCKERHUB}/${DOCKERHUBREPOAPI}:${VERSION}
+          docker push ${DOCKERHUB}/${DOCKERHUBREPOIDENTITY}:${VERSION}
+          echo ${DOCKERHUB}/${DOCKERHUBREPOAPI}:${VERSION} Deployed
+          echo ${DOCKERHUB}/${DOCKERHUBREPOIDENTITY}:${VERSION} Deployed
       - name: Save Version Number
         run: |
           echo ${VERSION} > bw_version.txt
@@ -89,40 +96,18 @@ jobs:
     needs: [check_version, build_bitbetter]
     env:
       DOCKERHUB: ${{ needs.check_version.outputs.dockerhub }}
-      REPO: ${{ needs.check_version.outputs.dockerhubrepo }}
+      DOCKERHUBREPOLICENSEGEN: ${{ needs.check_version.outputs.dockerhubrepolicensegen }}
     steps:
       - uses: actions/checkout@v2
       - name: Build Image
         id: build_image
         run: |
-          docker build -f ./src/licenseGen/Dockerfile --label com.bitwarden.product="licensegen" -t ${DOCKERHUB}/${REPO}:licensegen .
+          docker build -f ./src/licenseGen/Dockerfile --label com.bitwarden.product="licensegen" -t ${DOCKERHUB}/${DOCKERHUBREPOLICENSEGEN} .
       - name: Login
         run: |
           docker login -u ${{ secrets.dockerID }} -p ${{ secrets.dockerPassword }}
       - name: Deploy Latest
         run: |
-          docker tag ${DOCKERHUB}/${REPO}:licensegen ${DOCKERHUB}/${REPO}:licensegen-latest
-          docker push ${DOCKERHUB}/${REPO}:licensegen-latest
-          echo ${DOCKERHUB}/${REPO}:licensegen-latest Deployed
-
-  build_cert_gen:
-    runs-on: ubuntu-latest
-    name: Publish Certificate Generator
-    needs: [check_version, build_bitbetter]
-    env:
-      DOCKERHUB: ${{ needs.check_version.outputs.dockerhub }}
-      REPO: ${{ needs.check_version.outputs.dockerhubrepo }}
-    steps:
-      - uses: actions/checkout@v2
-      - name: Build Image
-        id: build_image
-        run: |
-          docker build -f ./.keys/Dockerfile -t ${DOCKERHUB}/${REPO}:certificate-gen .
-      - name: Login
-        run: |
-          docker login -u ${{ secrets.dockerID }} -p ${{ secrets.dockerPassword }}
-      - name: Deploy Latest
-        run: |
-          docker tag ${DOCKERHUB}/${REPO}:certificate-gen ${DOCKERHUB}/${REPO}:certificate-gen-latest
-          docker push ${DOCKERHUB}/${REPO}:certificate-gen-latest
-          echo ${DOCKERHUB}/${REPO}:certificate-gen-latest Deployed
+          docker tag ${DOCKERHUB}/${DOCKERHUBREPOLICENSEGEN} ${DOCKERHUB}/${DOCKERHUBREPOLICENSEGEN}:latest
+          docker push ${DOCKERHUB}/${DOCKERHUBREPOLICENSEGEN}:latest
+          echo ${DOCKERHUB}/${DOCKERHUBREPOLICENSEGEN}:latest Deployed
