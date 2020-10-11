@@ -1,4 +1,4 @@
-<a href="https://github.com/ayitaka/BitBetter/actions"><img alt="GitHub Actions Build" src="https://github.com/ayitaka/BitBetter/workflows/BitBetter%20Image/badge.svg"></a>
+<a href="https://github.com/ayitaka/BitBetterTest/actions"><img alt="GitHub Actions Build" src="https://github.com/ayitaka/BitBetterTest/workflows/BitBetterTest%20Image/badge.svg"></a>
 <a href="https://hub.docker.com/r/ayitaka/bitbetter"><img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/ayitaka/bitbetter.svg"></a>
 # BitBetter
 
@@ -34,7 +34,7 @@ Aside from docker, which you also need for Bitwarden, BitBetter requires the fol
 Run the install script:
 
 ```bash
-curl --retry 3 "https://raw.githubusercontent.com/Ayitaka/BitBetter/master/bitbetter.sh" -o "./bitbetter.sh" && chmod 0755 ./bitbetter.sh && ./bitbetter.sh install
+curl --retry 3 "https://raw.githubusercontent.com/Ayitaka/BitBetterTest/master/bitbetter.sh" -o "./bitbetter.sh" && chmod 0755 ./bitbetter.sh && ./bitbetter.sh install
 ```
 
 To update Bitwarden and BitBetter, run the install script again:

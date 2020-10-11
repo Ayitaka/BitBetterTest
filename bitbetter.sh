@@ -121,20 +121,20 @@ regenerate_certs() {
 	[ -d "${BITWARDEN_BASE}/bwdata/bitbetter" ] || mkdir -p "${BITWARDEN_BASE}/bwdata/bitbetter"
 
 	if [ "${BUILD}" ]; then
-		[ -d "${BITWARDEN_BASE}/BitBetter/.keys" ] || mkdir -p "${BITWARDEN_BASE}/BitBetter/.keys"
+		[ -d "${BITWARDEN_BASE}/${REPO}/.keys" ] || mkdir -p "${BITWARDEN_BASE}/${REPO}/.keys"
 
 		# If certs exist in BitBetter/.keys, back them up and delete them
-		if [ -e "${BITWARDEN_BASE}/BitBetter/.keys/cert.pem" ] || [ -e "${BITWARDEN_BASE}/BitBetter/.keys/key.pem" ] || [ -e "${BITWARDEN_BASE}/BitBetter/.keys/cert.cert" ] || [ -e "${BITWARDEN_BASE}/BitBetter/.keys/cert.pfx" ]; then
+		if [ -e "${BITWARDEN_BASE}/${REPO}/.keys/cert.pem" ] || [ -e "${BITWARDEN_BASE}/${REPO}/.keys/key.pem" ] || [ -e "${BITWARDEN_BASE}/${REPO}/.keys/cert.cert" ] || [ -e "${BITWARDEN_BASE}/${REPO}/.keys/cert.pfx" ]; then
 			mkdir -p "${BITBETTER_CERTS}/backups"
-			tar cvfz "${BITBETTER_CERTS}/backups/certs.$(date '+%F-%H%M%S').tgz" --directory="${BITWARDEN_BASE}/BitBetter" .keys/cert.cert .keys/cert.pem .keys/cert.pfx .keys/key.pem >/dev/null
-			rm -f "${BITWARDEN_BASE}/BitBetter/.keys/cert.cert" "${BITWARDEN_BASE}/BitBetter/.keys/cert.pem" "${BITWARDEN_BASE}/BitBetter/.keys/cert.pfx" "${BITWARDEN_BASE}/BitBetter/.keys/key.pem"
+			tar cvfz "${BITBETTER_CERTS}/backups/certs.$(date '+%F-%H%M%S').tgz" --directory="${BITWARDEN_BASE}/${REPO}" .keys/cert.cert .keys/cert.pem .keys/cert.pfx .keys/key.pem >/dev/null
+			rm -f "${BITWARDEN_BASE}/${REPO}/.keys/cert.cert" "${BITWARDEN_BASE}/${REPO}/.keys/cert.pem" "${BITWARDEN_BASE}/${REPO}/.keys/cert.pfx" "${BITWARDEN_BASE}/${REPO}/.keys/key.pem"
 		fi
 
 		# Soft link certs from BitBetter/.keys/ to bwdata/bitbetter/ so they are all in one place
-		[ -L "${BITWARDEN_BASE}/BitBetter/.keys/cert.cert" ] || ln -s "${BITWARDEN_BASE}/bwdata/bitbetter/cert.cert" "${BITWARDEN_BASE}/BitBetter/.keys/cert.cert"
-		[ -L "${BITWARDEN_BASE}/BitBetter/.keys/cert.pem" ] || ln -s "${BITWARDEN_BASE}/bwdata/bitbetter/cert.pem" "${BITWARDEN_BASE}/BitBetter/.keys/cert.pem"
-		[ -L "${BITWARDEN_BASE}/BitBetter/.keys/cert.pfx" ] || ln -s "${BITWARDEN_BASE}/bwdata/bitbetter/cert.pfx" "${BITWARDEN_BASE}/BitBetter/.keys/cert.pfx"
-		[ -L "${BITWARDEN_BASE}/BitBetter/.keys/key.pem" ] || ln -s "${BITWARDEN_BASE}/bwdata/bitbetter/key.pem" "${BITWARDEN_BASE}/BitBetter/.keys/key.pem"
+		[ -L "${BITWARDEN_BASE}/${REPO}/.keys/cert.cert" ] || ln -s "${BITWARDEN_BASE}/bwdata/bitbetter/cert.cert" "${BITWARDEN_BASE}/${REPO}/.keys/cert.cert"
+		[ -L "${BITWARDEN_BASE}/${REPO}/.keys/cert.pem" ] || ln -s "${BITWARDEN_BASE}/bwdata/bitbetter/cert.pem" "${BITWARDEN_BASE}/${REPO}/.keys/cert.pem"
+		[ -L "${BITWARDEN_BASE}/${REPO}/.keys/cert.pfx" ] || ln -s "${BITWARDEN_BASE}/bwdata/bitbetter/cert.pfx" "${BITWARDEN_BASE}/${REPO}/.keys/cert.pfx"
+		[ -L "${BITWARDEN_BASE}/${REPO}/.keys/key.pem" ] || ln -s "${BITWARDEN_BASE}/bwdata/bitbetter/key.pem" "${BITWARDEN_BASE}/${REPO}/.keys/key.pem"
 	fi
 
 	generate_certs() {
@@ -178,9 +178,9 @@ build_bitbetter() {
 	cd "${BITWARDEN_BASE}" || exit 1
 
 	# Use subshell, to cd and git pull latest src from Github, so no need to 'cd ..' back
-	if [ -d "${BITWARDEN_BASE}/BitBetter" ]; then
+	if [ -d "${BITWARDEN_BASE}/${REPO}" ]; then
 		(
-			cd "${BITWARDEN_BASE}/BitBetter" || exit 1
+			cd "${BITWARDEN_BASE}/${REPO}" || exit 1
 			git pull origin ${BRANCH} >/dev/null 2>&1;
 		)
 	else
