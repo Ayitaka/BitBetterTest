@@ -84,7 +84,7 @@ Example: generate_license.sh org "My Organization Display Name" admin@mybusiness
 
 ### Syntax
 ```bash
-./bitbetter.sh
+./bitbetter.sh help
 ```
 Install using images from Docker Hub
 ```bash
@@ -127,7 +127,7 @@ LOCALTIME             Force Bitwarden to write logs using localtime instead of U
 ## Building BitBetter
 Alternatively, you can build the docker images yourself using the BitBetter source code on Github.
 
-#### Using the install script:
+#### Using the bitbetter script:
 ```bash
 curl --retry 3 "https://raw.githubusercontent.com/Ayitaka/BitBetterTest/master/bitbetter.sh" -o "./bitbetter.sh" && chmod 0755 ./bitbetter.sh && ./bitbetter.sh install build
 ```
@@ -135,15 +135,17 @@ curl --retry 3 "https://raw.githubusercontent.com/Ayitaka/BitBetterTest/master/b
 ---
 
 #### Manually:
+Clone the BitBetterTest repository to your current directory:
 ```bash
 git clone https://github.com/Ayitaka/BitBetterTest.git
 ```
 
 Now that you've set up your build environment, you can **run the main build script** to generate a modified version of the `bitwarden/api` and `bitwarden/identity` docker images.
 
-Change to the BitBetter directory and run build.sh:
+Change to the BitBetter directory, replace the Dockerfile with the one for manual building, and run build.sh:
 ```bash
 cd BitBetterTest
+mv -f .build/Dockerfile.bitBetter ./Dockerfile
 ./build.sh
 ```
 
@@ -171,19 +173,28 @@ In order to ignore errors when trying to pull the modified images, you'll also w
 You can now start or restart Bitwarden as normal and the modified api will be used. **It is now ready to accept self-issued licenses.**
 
 ## Updating Built BitBetter and Bitwarden
+#### Using the bitbetter script:
+```bash
+curl --retry 3 "https://raw.githubusercontent.com/Ayitaka/BitBetterTest/master/bitbetter.sh" -o "./bitbetter.sh" && chmod 0755 ./bitbetter.sh && ./bitbetter.sh update build
+```
+
+---
+
+#### Manually:
 To update Bitwarden, the provided `update-bitwarden.sh` script can be used. It will rebuild the BitBetter images and automatically update Bitwarden afterwards. Docker pull errors can be ignored for api and identity images.
 
 ## Manually Generating Certificate
 
-If you wish to generate your self-signed cert & key manually, you can run the following commands.
+If you wish to generate your self-signed certificate and key manually, you can run the following commands.
 
 ```bash
 openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.cert -days 36500 -outform DER -passout pass:test
 openssl x509 -inform DER -in cert.cert -out cert.pem
 openssl pkcs12 -export -out cert.pfx -inkey key.pem -in cert.pem -passin pass:test -passout pass:test
 ```
-
 > Note that the password here must be `test`.<sup>[1](#f1)</sup>
+
+Then just move the files **cert.cert cert.pem cert.pfx key.pem** to /path/to/BitBetterTest/.keys
 
 ---
 ## Manually Generating Signed Licenses
@@ -196,6 +207,7 @@ First, change to the`BitBetter/src/licenseGen` directory, and then **build the l
 
 ```bash
 cd BitBetterTest/src/licenseGen
+mv -f ../../.build/Dockerfile.licenseGen ./Dockerfile
 ./build.sh
 ```
 
