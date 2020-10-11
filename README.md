@@ -16,10 +16,16 @@ Credit to https://github.com/h44z/BitBetter and https://github.com/jakeswenson/B
 1. [Getting Started](#getting-started)
     + [Dependencies](#dependencies)
     + [Installing BitBetter](#installing-bitbetter)
-    + [Updating Bitwarden and BitBetter](#updating-bitwarden-and-bitbetter)
-    + [Building BitBetter](#building-bitbetter)
+    + [Updating BitBetter and Bitwarden](#updating-bitbetter-and-bitwarden)
     + [Generating Signed Licenses](#generating-signed-licenses)
+2. [Advanced](#advanced)
+    + [Building BitBetter](#building-bitbetter)
+    + [Updating Built BitBetter and Bitwarden](#updating-built--bitbetter-and-bitwarden)
+    + [Manually Generating Certificate](#manually-generating-certificate)
+    + [Manually Generating Signed Licenses](#manually-generating-signed-licenses)
 2. [Script Options](#script-options)
+    + [Syntax](#syntax)
+    + [Options](#options)
 3. [FAQ](#faq-questions-you-might-have-)
 4. [Footnotes](#footnotes)
 
@@ -43,7 +49,7 @@ Run the install script:
 curl --retry 3 "https://raw.githubusercontent.com/Ayitaka/BitBetterTest/master/bitbetter.sh" -o "./bitbetter.sh" && chmod 0755 ./bitbetter.sh && ./bitbetter.sh install
 ```
 
-## Updating Bitwarden and BitBetter
+## Updating BitBetter and Bitwarden
 Using the bitbetter script, you can update both BitBetter and Bitwarden:
 
 ```bash
@@ -51,6 +57,28 @@ Using the bitbetter script, you can update both BitBetter and Bitwarden:
 ```
 
 To update Bitwarden, the provided `update-bitwarden.sh` script can be used. It will rebuild the BitBetter images and automatically update Bitwarden afterwards. Docker pull errors can be ignored for api and identity images.
+
+## Generating Signed Licenses
+
+Using the generate_license script:
+
+For a user:
+```bash
+./generate_license.sh user USERS_NAME EMAIL USERS_GUID
+```
+
+Example: generate_license.sh user Ayitaka ayitaka@example.com 12345678-1234-1234-1234-123456789012
+
+---
+
+For an Organization:
+```bash
+./generate_license.sh org ORGS_NAME EMAIL BUSINESS_NAME
+```
+
+Example: generate_license.sh org "My Organization Display Name" admin@mybusinesscompany.com "My Company Inc."
+
+# Advanced
 
 ## Building BitBetter
 Alternatively, you can build the docker images yourself using the BitBetter source code on Github.
@@ -95,8 +123,9 @@ You'll also want to edit the `/path/to/bwdata/scripts/run.sh` file. In the `func
 
 You can now start or restart Bitwarden as normal and the modified api will be used. **It is now ready to accept self-issued licenses.**
 
----
-### Note: Manually generating Certificate & Key
+## Updating Built BitBetter and Bitwarden
+
+## Manually Generating Certificate
 
 If you wish to generate your self-signed cert & key manually, you can run the following commands.
 
@@ -109,24 +138,7 @@ openssl pkcs12 -export -out cert.pfx -inkey key.pem -in cert.pem -passin pass:te
 > Note that the password here must be `test`.<sup>[1](#f1)</sup>
 
 ---
-
-## Generating Signed Licenses
-
-Using the generate_license script:
-
-For a user:
-```bash
-./generate_license.sh user USERS_NAME EMAIL USERS_GUID
-```
-
-Example: generate_license.sh user Ayitaka ayitaka@example.com 12345678-1234-1234-1234-123456789012
-
-For an Organization:
-```bash
-./generate_license.sh org ORGS_NAME EMAIL BUSINESS_NAME
-```
-
-Example: generate_license.sh org "My Organization Display Name" admin@mybusinesscompany.com "My Company Inc."
+## Manually Generating Signed Licenses
 
 Manually generating licenses:
 
@@ -165,12 +177,9 @@ Additional, instead of interactive mode, you can also pass the parameters direct
 ./src/licenseGen/run.sh /Absolute/Path/To/BitBetter/.keys/cert.pfx org "Name" "EMail" "Install-ID used to install the server"
 ```
 
----
-
-
 # Script Options
 
-## Syntax:
+## Syntax
 ```bash
 ./bitbetter.sh
 ```
@@ -200,11 +209,13 @@ Update/force rebuild from Github src
 ```
 
 ## Options
+```yaml
 AUTO                  Skip prompts, update this script, create certs only if they do not exist, and recreate docker-compose.override.yml
 REGENCERTS            Force regeneratioin of certificates
 RECREATE              Force recreation of docker-compose.override.yml
 RESTART               Force restart of Bitwarden if Bitwarden's update does not do a restart
-LOCALTIME             Force Bitwarden to write logs using localtime instead of UTC
+LOCALTIME             Force Bitwarden to write logs using localtime instead of UTC (use with RECREATE, or it has no effect)
+```
 
 
 # FAQ: Questions you might have.

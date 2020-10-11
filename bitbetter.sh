@@ -14,7 +14,7 @@
 # REGENCERTS	Force regeneratioin of certificates
 # RECREATE		Force recreation of docker-compose.override.yml
 # RESTART		Force restart of Bitwarden if Bitwarden's update does not do a restart
-# LOCALTIME		Force Bitwarden to write logs using localtime instead of UTC
+# LOCALTIME		Force Bitwarden to write logs using localtime instead of UTC (use with RECREATE, or it has no effect)
 #
 # linter: https://www.shellcheck.net/
 
