@@ -14,6 +14,7 @@ jobs:
       buildimage: ${{ steps.get_version.outputs.buildimage }}
       buildversion: ${{ steps.get_version.outputs.buildversion }}
       dockerhub: ${{ steps.set_repo.outputs.dockerhub }}
+      dockerhubrepo: ${{ steps.set_repo.outputs.dockerhubrepo }}
     steps:
       - uses: actions/checkout@v2
       - name: Get Latest Version
