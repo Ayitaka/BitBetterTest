@@ -10,8 +10,6 @@ _Beware! BitBetter does janky stuff to rewrite the bitwarden core dll and allow 
 
 Credit to https://github.com/h44z/BitBetter and https://github.com/jakeswenson/BitBetter
 
-![BitBetter Image](https://github.com/Ayitaka/BitBetterTest/workflows/BitBetter%20Image/badge.svg)
-
 # Table of Contents
 1. [Getting Started](#getting-started)
     + [Dependencies](#dependencies)
@@ -136,16 +134,16 @@ curl --retry 3 "https://raw.githubusercontent.com/Ayitaka/BitBetterTest/master/b
 ---
 
 #### Manually:
-Clone the BitBetterTest repository to your current directory:
+Clone the BitBetter repository to your current directory:
 ```bash
-git clone https://github.com/Ayitaka/BitBetterTest.git
+git clone https://github.com/Ayitaka/BitBetter.git
 ```
 
 Now that you've set up your build environment, you can **run the main build script** to generate a modified version of the `bitwarden/api` and `bitwarden/identity` docker images.
 
 Change to the BitBetter directory, replace the Dockerfile with the one for manually building, and run build.sh:
 ```bash
-cd BitBetterTest
+cd BitBetter
 mv -f .build/Dockerfile.bitBetter ./Dockerfile
 ./build.sh
 ```
@@ -177,7 +175,7 @@ You can now start or restart Bitwarden as normal and the modified api will be us
 
 #### Using the bitbetter script:
 ```bash
-curl --retry 3 "https://raw.githubusercontent.com/Ayitaka/BitBetterTest/master/bitbetter.sh" -o "./bitbetter.sh" && chmod 0755 ./bitbetter.sh && ./bitbetter.sh update build
+./bitbetter.sh update build
 ```
 
 ---
@@ -186,7 +184,7 @@ curl --retry 3 "https://raw.githubusercontent.com/Ayitaka/BitBetterTest/master/b
 To update Bitwarden, you can use the provided script. It will rebuild the BitBetter images and automatically update Bitwarden afterwards. Docker pull errors can be ignored for api and identity images.
 
 ```bash
-cd BitBetterTest
+cd BitBetter
 cp -f .build/update-bitwarden.sh ./update-bitwarden.sh
 ```
 
@@ -201,7 +199,7 @@ openssl pkcs12 -export -out cert.pfx -inkey key.pem -in cert.pem -passin pass:te
 ```
 > Note that the password here must be `test`.<sup>[1](#f1)</sup>
 
-Then just move the files **cert.cert cert.pem cert.pfx key.pem** to /path/to/BitBetterTest/.keys
+Then just move the files **cert.cert cert.pem cert.pfx key.pem** to /path/to/BitBetter/.keys
 
 ---
 ## Manually Generating Signed Licenses
@@ -213,7 +211,7 @@ There is a tool included in the directory `src/licenseGen/` that will generate n
 First, change to the`BitBetter/src/licenseGen` directory, then replace the Dockerfile with the one for manually building, and finally **build the license generator**.<sup>[2](#f2)</sup>
 
 ```bash
-cd BitBetterTest/src/licenseGen
+cd BitBetter/src/licenseGen
 mv -f ../../.build/Dockerfile.licenseGen ./Dockerfile
 ./build.sh
 ```

@@ -33,7 +33,7 @@ if [ "${1,,}" == "help" ] || [ "${1,,}" == "--help" ] || [ "${1,,}" == "-h" ]; t
         echo "     generate_license.sh user USERS_NAME EMAIL USERS_GUID"
         echo "     generate_license.sh org ORGS_NAME EMAIL BUSINESS_NAME"
         echo ""
-        echo "Example: generate_license.sh user Ayitaka ayitaka@example.com 12345678-1234-1234-1234-123456789012"
+        echo "Example: generate_license.sh user SomeUser someuser@example.com 12345678-1234-1234-1234-123456789012"
         echo 'Example: generate_license.sh org "My Organization Display Name" admin@mybusinesscompany.com "My Company Inc."'
         echo ""
         exit
