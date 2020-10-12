@@ -46,6 +46,8 @@ The easiest way to install BitBetter is to use the bitbetter script which utiliz
 curl --retry 3 "https://raw.githubusercontent.com/Ayitaka/BitBetterTest/master/bitbetter.sh" -o "./bitbetter.sh" && chmod 0755 ./bitbetter.sh && ./bitbetter.sh install
 ```
 
+For available options, see [Script Options](#script-options)
+
 ## Updating BitBetter and Bitwarden
 
 #### Using the bitbetter script, you can update both BitBetter and Bitwarden:
@@ -141,7 +143,7 @@ git clone https://github.com/Ayitaka/BitBetterTest.git
 
 Now that you've set up your build environment, you can **run the main build script** to generate a modified version of the `bitwarden/api` and `bitwarden/identity` docker images.
 
-Change to the BitBetter directory, replace the Dockerfile with the one for manual building, and run build.sh:
+Change to the BitBetter directory, replace the Dockerfile with the one for manually building, and run build.sh:
 ```bash
 cd BitBetterTest
 mv -f .build/Dockerfile.bitBetter ./Dockerfile
@@ -208,7 +210,7 @@ Manually generating licenses:
 
 There is a tool included in the directory `src/licenseGen/` that will generate new individual and organization licenses. These licenses will be accepted by the modified Bitwarden because they will be signed by the certificate you generated in earlier steps.
 
-First, change to the`BitBetter/src/licenseGen` directory, and then **build the license generator**.<sup>[2](#f2)</sup>
+First, change to the`BitBetter/src/licenseGen` directory, then replace the Dockerfile with the one for manually building, and finally **build the license generator**.<sup>[2](#f2)</sup>
 
 ```bash
 cd BitBetterTest/src/licenseGen
